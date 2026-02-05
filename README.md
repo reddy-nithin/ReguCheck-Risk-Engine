@@ -5,6 +5,8 @@ turn raw loan files into a reporting‑ready view: **ingest → validate → rec
 → report**. It uses public Lending Club data to demonstrate governance checks,
 control reconciliations, and business‑friendly reporting in one flow.
 
+**Live Demo:** https://regucheck-risk-engine-v9qextfge3a8chvnywvqtg.streamlit.app/
+
 ![ReguCheck Dashboard](assets/overview.png)
 
 ## What this project does
