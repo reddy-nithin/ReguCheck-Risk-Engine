@@ -1,0 +1,10 @@
+*.csv
+__pycache__/
+.DS_Store
+*.pyc
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
