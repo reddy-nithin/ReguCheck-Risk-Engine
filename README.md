@@ -72,9 +72,8 @@ streamlit run app.py
 
 ## Screenshots
 
-![Dashboard overview](assets/overview.png)
+![Portfolio tab](assets/overview.png)
 ![How to read guide expanded](assets/guide-expanded.png)
-![Portfolio tab](assets/portfolio.png)
 ![Data Quality tab](assets/data-quality.png)
 ![Reconciliation tab](assets/reconciliation.png)
 
