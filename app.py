@@ -2,6 +2,10 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+from data_loader import load_and_stage
+from governance_engine import run_governance
+from reconciliation import run_reconciliation
+
 
 def _to_numeric_rate(rate_series: pd.Series) -> pd.Series:
     if rate_series is None:
@@ -21,6 +25,19 @@ def _load_csv(path: str) -> pd.DataFrame:
 
 st.set_page_config(page_title="ReguCheck", layout="wide")
 st.title("ReguCheck: Regulatory Risk Reporting System")
+
+with st.sidebar:
+    st.header("Data Pipeline")
+    st.caption("Run once to generate the CSVs used by the dashboard.")
+    if st.button("Run pipeline"):
+        with st.spinner("Running data ingestion, validation, and reconciliation..."):
+            try:
+                load_and_stage()
+                run_governance()
+                run_reconciliation()
+                st.success("Pipeline completed. Refresh the tabs to view data.")
+            except Exception as exc:
+                st.error(f"Pipeline failed: {exc}")
 with st.expander("How to read this dashboard (plain-English guide)"):
     st.markdown(
         "- **Portfolio tab**: A quick read on portfolio size and pricing.\n"
@@ -53,7 +70,7 @@ tab_portfolio, tab_quality, tab_recon = st.tabs(
 with tab_portfolio:
     staged_df = _load_csv("staged_loan_data.csv")
     if staged_df.empty:
-        st.info("No staged data found. Run `data_loader.py` first.")
+        st.info("No staged data found. Use the 'Run pipeline' button in the sidebar.")
     else:
         st.caption(
             "Interpretation: Higher exposure in a rating bucket means more "
@@ -97,7 +114,7 @@ with tab_quality:
 
     st.metric("Data Failure Rate", f"{failure_rate:.2f}%")
     if dq_df.empty:
-        st.info("No data quality exceptions found. Run `governance_engine.py`.")
+        st.info("No data quality exceptions found. Use the 'Run pipeline' button.")
     else:
         st.caption(
             "Interpretation: Review Error_Reason to see which rule each row failed."
@@ -107,7 +124,7 @@ with tab_quality:
 with tab_recon:
     recon_df = _load_csv("recon_report.csv")
     if recon_df.empty:
-        st.info("No reconciliation report found. Run `reconciliation.py`.")
+        st.info("No reconciliation report found. Use the 'Run pipeline' button.")
     else:
         st.caption(
             "Interpretation: Red status indicates variance above the 1% threshold."
